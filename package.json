@@ -1,0 +1,42 @@
+{
+  "name": "myrmidon",
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "author": "brettof86",
+  "description": "Use YouTube like podcasts",
+  "contributors": [
+    {
+      "name": "Marak Squires",
+      "email": "marak@nodejitsu.com"
+    }
+  ],
+  "bin": {
+    "myrmidon": "./bin/myrmidon"
+  },
+  "scripts": {
+    "start": "node ./bin/myrmidon",
+    "test": "vows --spec --isolate",
+    "predeploy": "echo This will be run before deploying the app",
+    "postdeploy": "echo This will be run after deploying the app"
+  },
+  "main": "./lib/myrmidon",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brettof86/myrmidon.git"
+  },
+  "keywords": [
+    "cli",
+    "youtube",
+    "podcast"
+  ],
+  "dependencies": {
+    "youtube-dl": "~1.3.6"
+  },
+  "analyze": false,
+  "devDependencies": {},
+  "bundledDependencies": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
