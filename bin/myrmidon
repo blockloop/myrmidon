@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+var lib = require('../lib/myrmidon.js'),
+	fs = require('fs'),
+	path = require('path');
+
+var opts = require("nomnom")
+	.option('debug', {
+		abbr: 'd',
+		flag: true,
+		help: 'Print debugging info'
+	})
+	.option('config', {
+		abbr: 'c',
+		default: 'config.json',
+		help: 'JSON file with tests to run'
+	})
+	.option('version', {
+		abbr: 'v',
+		flag: true,
+		help: 'print version and exit',
+		callback: function() {
+			var js = require('../package.json');
+			return js.version;
+		}
+	})
+	.option('add-feed', {
+		abbr: 'a',
+		flag: false,
+		help: 'Add a feed (username) to your download list',
+		callback: function(feed) {
+			lib.addFeed(feed);
+		}
+	})
+	.parse();
