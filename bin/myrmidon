@@ -2,34 +2,40 @@
 
 var lib = require('../lib/myrmidon.js'),
 	fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	_ = require('lodash');
 
 var opts = require("nomnom")
-	.option('debug', {
-		abbr: 'd',
-		flag: true,
-		help: 'Print debugging info'
-	})
-	.option('config', {
-		abbr: 'c',
-		default: 'config.json',
-		help: 'JSON file with tests to run'
-	})
 	.option('version', {
 		abbr: 'v',
 		flag: true,
 		help: 'print version and exit',
 		callback: function() {
-			var js = require('../package.json');
-			return js.version;
+			return require('../package.json').version;
 		}
 	})
-	.option('add-feed', {
-		abbr: 'a',
+	.option('add-playlist', {
+		abbr: 'p',
 		flag: false,
-		help: 'Add a feed (username) to your download list',
-		callback: function(feed) {
-			lib.addFeed(feed);
+		help: 'A playlist by ID',
+		callback: function(playlistId) {
+			lib.playlistId(playlistId);
+		}
+	})
+	.option('config', {
+		abbr: 'c',
+		default: 'config.json',
+		help: 'Use this config file'
+	})
+	.option('feeds-by-user', {
+		flag: false,
+		help: 'Print all feeds for a given username',
+		callback: function(username) {
+			lib.getFeedsForUser(username,function(items){
+				_.forEach(items, function(item){
+					console.log(JSON.stringify(item,null,2));
+				});
+			});
 		}
 	})
 	.parse();

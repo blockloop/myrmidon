@@ -1,0 +1,8 @@
+params for all:
+	?v=2&alt=json
+list playlists for user:
+	gdata.youtube.com/feeds/base/users/{username}/playlists
+get items from playlist:
+	gdata.youtube.com/feeds/api/playlists/{playlistId}
+thumbnail for a youtube video:
+	img.youtube.com/vi/{videoId}/default.jpg
