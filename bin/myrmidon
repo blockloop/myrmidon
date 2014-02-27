@@ -8,6 +8,12 @@ var util = require('../lib/utils');
 var prompt = require('read');
 var program = require('commander');
 var colors = require('colors');
+var now = require('moment');
+
+
+function date(v) {
+	return now(v).toDate();
+}
 
 program
 	.version(require('../package.json').version)
@@ -22,31 +28,55 @@ program
 
 program
 	.command('add-by-user [user]')
-	.action(
-		function (user) {
-			if (!user) {
-				console.error("Missing user parameter".red);
-				process.exit(1);
-			}
-			lib.getFeedsForUser(user, function(items){
-				console.log('Found '+ items.length +' playlists for '+ user);
-				console.log('');
+	.action(function (user) {
+		if (!user) {
+			console.error("Missing user parameter".red);
+			process.exit(1);
+		}
+		lib.getFeedsForUser(user, function(items){
+			console.log('Found '+ items.length +' playlists for '+ user);
+			console.log('');
 
-				_.forEach(items, function(item, i){
-					console.log(i + ": " + item.title);
-				});
-				console.log('');
+			_.forEach(items, function(item, i){
+				console.log("\t"+ i + ": " + item.title);
+			});
+			console.log('');
 
-				prompt({prompt: 'Choose a playlist: '}, function(err, result){
-					var choice = items[result];
-					lib.addFeed(choice);
-				});
+			prompt({prompt: 'Choose a playlist: '}, function(err, result){
+				var choice = items[result];
+				lib.addFeed(choice);
 			});
 		});
+	});
+
+program
+	.command('import-feed [userId]')
+	.action(function (user) {
+		if (!user) {
+			console.error("Missing user parameter".red);
+			process.exit(1);
+		}
+		lib.importFeed(user);
+	});
+
+
+program
+	.command('download [user]')
+	.option('-l, --limit <d>', 'Only download videos after this date/time', date)
+	.option('-t, --today', 'Only download videos published today')
+	.action(function (user, opts) {
+		if (!user) {
+			throw new Error("Missing user parameter".red);
+		}
+		var limit = opts.today ? now() : opts.limit;
+		lib.downloadNewSubscriptions(user, limit);
+	});
+
 
 program
 	.command('*')
 	.action(program.help);
+
 
 program
 	.parse(process.argv);
