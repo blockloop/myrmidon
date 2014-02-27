@@ -31,15 +31,18 @@
   ],
   "dependencies": {
     "youtube-dl": "~1.3.6",
-    "nomnom": "~1.6.2",
     "lodash": "~2.4.1",
-    "restler": "~3.2.0"
+    "restler": "~3.2.0",
+    "co-prompt": "~1.0.0",
+    "read": "~1.0.5",
+    "commander": "~2.1.0",
+    "colors": "~0.6.2"
   },
   "analyze": false,
   "devDependencies": {},
   "bundledDependencies": [],
   "license": "MIT",
   "engines": {
-    "node": ">=0.6"
+    "node": ">=0.11"
   }
 }

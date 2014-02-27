@@ -1,41 +1,52 @@
 #!/usr/bin/env node
 
-var lib = require('../lib/myrmidon.js'),
-	fs = require('fs'),
-	path = require('path'),
-	_ = require('lodash');
+var lib = require('../lib/myrmidon.js');
+var fs = require('fs');
+var path = require('path');
+var _ = require('lodash');
+var util = require('../lib/utils');
+var prompt = require('read');
+var program = require('commander');
+var colors = require('colors');
 
-var opts = require("nomnom")
-	.option('version', {
-		abbr: 'v',
-		flag: true,
-		help: 'print version and exit',
-		callback: function() {
-			return require('../package.json').version;
-		}
-	})
-	.option('add-playlist', {
-		abbr: 'p',
-		flag: false,
-		help: 'A playlist by ID',
-		callback: function(playlistId) {
-			lib.playlistId(playlistId);
-		}
-	})
-	.option('config', {
-		abbr: 'c',
-		default: 'config.json',
-		help: 'Use this config file'
-	})
-	.option('feeds-by-user', {
-		flag: false,
-		help: 'Print all feeds for a given username',
-		callback: function(username) {
-			lib.getFeedsForUser(username,function(items){
-				_.forEach(items, function(item){
-					console.log(JSON.stringify(item,null,2));
+program
+	.version(require('../package.json').version)
+	.option('-c, --config', 'Specify a config file to use');
+
+
+program
+	.command('add-playlist [id]')
+	.action(function(id, opts) {
+		lib.playlistId(id);
+	});
+
+program
+	.command('add-by-user [user]')
+	.action(
+		function (user) {
+			if (!user) {
+				console.error("Missing user parameter".red);
+				process.exit(1);
+			}
+			lib.getFeedsForUser(user, function(items){
+				console.log('Found '+ items.length +' playlists for '+ user);
+				console.log('');
+
+				_.forEach(items, function(item, i){
+					console.log(i + ": " + item.title);
+				});
+				console.log('');
+
+				prompt({prompt: 'Choose a playlist: '}, function(err, result){
+					var choice = items[result];
+					lib.addFeed(choice);
 				});
 			});
-		}
-	})
-	.parse();
+		});
+
+program
+	.command('*')
+	.action(program.help);
+
+program
+	.parse(process.argv);
