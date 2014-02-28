@@ -69,7 +69,7 @@ program
 			throw new Error("Missing user parameter".red);
 		}
 		var limit = opts.today ? now() : opts.limit;
-		lib.downloadNewSubscriptions(user, limit);
+		lib.downloadNewSubscriptions(user, limit||(new Date(0)));
 	});
 
 
