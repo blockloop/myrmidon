@@ -54,11 +54,11 @@ program
 
 program
 	.command('download <user>')
-	.option('-l, --limit <d>', 'Only download videos after this date/time', date)
+	.option('-l, --limit <date>', 'Only download videos after this date/time', date)
 	.option('-t, --today', 'Only download videos published today')
 	.action(function (user, opts) {
 		var limit = opts.today ? now() : opts.limit;
-		lib.downloadNewSubscriptions(user, limit||(new Date(0)));
+		lib.downloadNewSubscriptions(user, opts);
 	});
 
 
