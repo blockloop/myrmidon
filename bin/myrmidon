@@ -21,18 +21,14 @@ program
 
 
 program
-	.command('add-playlist [id]')
+	.command('add-playlist <id>')
 	.action(function(id, opts) {
 		lib.playlistId(id);
 	});
 
 program
-	.command('add-by-user [user]')
+	.command('add-by-user <user>')
 	.action(function (user) {
-		if (!user) {
-			console.error("Missing user parameter".red);
-			process.exit(1);
-		}
 		lib.getFeedsForUser(user, function(items){
 			console.log('Found '+ items.length +' playlists for '+ user);
 			console.log('');
@@ -50,24 +46,17 @@ program
 	});
 
 program
-	.command('import-feed [userId]')
+	.command('import-feed <userId>')
 	.action(function (user) {
-		if (!user) {
-			console.error("Missing user parameter".red);
-			process.exit(1);
-		}
 		lib.importFeed(user);
 	});
 
 
 program
-	.command('download [user]')
+	.command('download <user>')
 	.option('-l, --limit <d>', 'Only download videos after this date/time', date)
 	.option('-t, --today', 'Only download videos published today')
 	.action(function (user, opts) {
-		if (!user) {
-			throw new Error("Missing user parameter".red);
-		}
 		var limit = opts.today ? now() : opts.limit;
 		lib.downloadNewSubscriptions(user, limit||(new Date(0)));
 	});
