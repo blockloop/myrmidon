@@ -8,11 +8,11 @@ var util = require('../lib/utils');
 var prompt = require('read');
 var program = require('commander');
 var colors = require('colors');
-var now = require('moment');
+var moment = require('moment');
+var now = moment;
 
-
-function date(v) {
-	return now(v).toDate();
+function endOfDay(val) {
+	return moment(val).endOf('day');
 }
 
 program
@@ -31,7 +31,7 @@ program
 	.action(function (user) {
 		lib.getFeedsForUser(user, function(items){
 			console.log('Found '+ items.length +' playlists for '+ user);
-			console.log('');
+			console.log();
 
 			_.forEach(items, function(item, i){
 				console.log("\t"+ i + ": " + item.title);
@@ -54,10 +54,9 @@ program
 
 program
 	.command('download <user>')
-	.option('-l, --limit <date>', 'Only download videos after this date/time', date)
-	.option('-t, --today', 'Only download videos published today')
+	.option('--after <2014-01-01>', 'Only download videos published after this day', endOfDay, moment(0))
+	.option('--before <2014-01-01>', 'Only download videos published before this day', moment, now().endOf('day'))
 	.action(function (user, opts) {
-		var limit = opts.today ? now() : opts.limit;
 		lib.downloadNewSubscriptions(user, opts);
 	});
 
