@@ -15,6 +15,10 @@ function endOfDay(val) {
 	return moment(val).endOf('day');
 }
 
+function startOfDay(val) {
+	return moment(val).startOf('day');
+}
+
 program
 	.version(require('../package.json').version)
 	.option('-c, --config', 'Specify a config file to use');
@@ -36,7 +40,7 @@ program
 			_.forEach(items, function(item, i){
 				console.log("\t"+ i + ": " + item.title);
 			});
-			console.log('');
+			console.log();
 
 			prompt({prompt: 'Choose a playlist: '}, function(err, result){
 				var choice = items[result];
@@ -54,7 +58,7 @@ program
 
 program
 	.command('download <user>')
-	.option('--after <2014-01-01>', 'Only download videos published after this day', endOfDay, moment(0))
+	.option('--after <2014-01-01>', 'Only download videos published after this day', moment, moment(0))
 	.option('--before <2014-01-01>', 'Only download videos published before this day', moment, now().endOf('day'))
 	.action(function (user, opts) {
 		lib.downloadNewSubscriptions(user, opts);
