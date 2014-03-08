@@ -25,9 +25,9 @@ program
 
 
 program
-	.command('add-playlist <id>')
+	.command('download-playlist <id>')
 	.action(function(id, opts) {
-		lib.playlistId(id);
+		lib.downloadPlaylist(id, opts);
 	});
 
 program
@@ -40,11 +40,9 @@ program
 			_.forEach(items, function(item, i){
 				console.log("\t"+ i + ": " + item.title);
 			});
-			console.log();
 
-			prompt({prompt: 'Choose a playlist: '}, function(err, result){
-				var choice = items[result];
-				lib.addFeed(choice);
+			prompt({prompt: "\nChoose a playlist: "}, function(err, result){
+				lib.addFeed(items[result]);
 			});
 		});
 	});
