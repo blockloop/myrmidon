@@ -2,7 +2,7 @@
 
 var lib = require('../lib/myrmidon.js');
 var fs = require('fs');
-var path = require('path');
+var Path = require('path');
 var _ = require('lodash');
 var util = require('../lib/utils');
 var prompt = require('read');
@@ -10,18 +10,18 @@ var program = require('commander');
 var colors = require('colors');
 var moment = require('moment');
 var now = moment;
+var Config = require('../config.json');
 
-function endOfDay(val) {
-	return moment(val).endOf('day');
-}
-
-function startOfDay(val) {
-	return moment(val).startOf('day');
-}
+(function validateConfig(){
+	if (!fs.existsSync(Config.mediaDir)) {
+		var msg = 'Config mediaDir (' + Config.mediaDir + ') does not exist';
+		console.error(msg.red);
+		process.exit(1);
+	}
+})();
 
 program
-	.version(require('../package.json').version)
-	.option('-c, --config', 'Specify a config file to use');
+	.version(require('../package.json').version);
 
 
 program
@@ -29,6 +29,7 @@ program
 	.action(function(id, opts) {
 		lib.downloadPlaylist(id, opts);
 	});
+
 
 program
 	.command('add-by-user <user>')
@@ -47,12 +48,6 @@ program
 		});
 	});
 
-program
-	.command('import-feed <userId>')
-	.action(function (user) {
-		lib.importFeed(user);
-	});
-
 
 program
 	.command('download <user>')
@@ -63,10 +58,8 @@ program
 	});
 
 
-program
-	.command('*')
-	.action(program.help);
+program.parse(process.argv);
 
-
-program
-	.parse(process.argv);
+if (!program.args.length) {
+	program.help();
+}
