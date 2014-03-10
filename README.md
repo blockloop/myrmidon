@@ -11,7 +11,7 @@ cd myrmidon
 ```
 
 ```
-ln -s /usr/local/sbin/myrmidon bin/myrmidon
+ln -s bin/myrmidon /usr/local/sbin/myrmidon
 myrmidon --help
 ```
 
